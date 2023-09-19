@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // This is the theme of your application.
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 1, 13, 65),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 1, 13, 65),
          brightness: Brightness.dark),
         useMaterial3: true,
       ),
@@ -92,15 +92,21 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
+
         child: ListView.builder(
+          // listView to Show the list of Contacts
           itemCount: _contacts.length,
           itemBuilder:(context, index) =>
             Container(
-              padding: EdgeInsets.all(10.0),
-              color: Theme.of(context).primaryColor,
-              child: Text('${_contacts[index].displayName}',
-              style: Theme.of(context).textTheme.headlineMedium,)
-              )
+              padding: EdgeInsets.symmetric(vertical: 0.8),
+              color: Colors.white30,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                color: Theme.of(context).primaryColor,
+                child: Text(_contacts[index].displayName,
+                style: Theme.of(context).textTheme.headlineSmall,)
+                ),
+            )
           ,
         ),
       ),
