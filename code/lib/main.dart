@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'widgets/contact_overlay.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,24 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void loadContacts() async{
           // Request contact permission
       if (await FlutterContacts.requestPermission()) {
-        // Get all contacts (lightly fetched)
+        // Get all contacts
             _contacts = await FlutterContacts.getContacts();
             setState(() {
             });
         }
-  }
-
-  int _counter = 0;
-  
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
   }
 
   @override
@@ -103,18 +91,24 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                 color: Theme.of(context).primaryColor,
-                child: Text(_contacts[index].displayName,
-                style: Theme.of(context).textTheme.headlineSmall,)
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: (MediaQuery.sizeOf(context).width - 68.8),
+                      child: Text(_contacts[index].displayName,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ),
+                    IconButton(onPressed:() => createContactOverlay(context),
+                     icon: Icon(Icons.question_mark_rounded)
+                    )
+                  ],
+                )
                 ),
             )
           ,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
