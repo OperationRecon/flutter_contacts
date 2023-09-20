@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 OverlayEntry? contactOverlay;
 
-void createContactOverlay(BuildContext context){
+void createContactOverlay(BuildContext context, Future<Contact?> contactData) async{
 
   // remove older overlay if existent
   removeHighlightOverlay();
 
+  // load data of desired contact
+  Contact? data = await contactData;
+
   // build new overlay
   contactOverlay = OverlayEntry(builder: (context) {
-    return OverlayExample();
+    return OverlayExample(contactData: data);
   }
   );
 
   assert (contactOverlay != null);
 
+  // ignore: use_build_context_synchronously
   Overlay.of(context).insert(contactOverlay!);
   
 }
 
-// Remove the OverlayEntry.
+// Remove the OverlayEntry
 void removeHighlightOverlay() {
   if (contactOverlay != null)
   {
@@ -31,7 +36,12 @@ void removeHighlightOverlay() {
   }
 
 class OverlayExample extends StatefulWidget {
-  const OverlayExample({super.key,});
+  const OverlayExample({super.key,
+    required this.contactData,
+    });
+
+  final Contact? contactData;
+
   @override
   State<OverlayExample> createState() => _OverlayExampleState();
 }
@@ -60,7 +70,7 @@ class _OverlayExampleState extends State<OverlayExample> {
         child: 
         Column(mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("Details To Be Added",
+          Text(widget.contactData!.displayName,
           style: Theme.of(context).textTheme.headlineLarge,),
           IconButton(onPressed: () => removeHighlightOverlay(),
            icon: Icon(Icons.delete_forever))

@@ -99,7 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),
-                    IconButton(onPressed:() => createContactOverlay(context),
+                    IconButton(onPressed:() => createContactOverlay(context, 
+                    FlutterContacts.getContact(_contacts[index].id, withProperties: true)),
                      icon: Icon(Icons.question_mark_rounded)
                     )
                   ],
