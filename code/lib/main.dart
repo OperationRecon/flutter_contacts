@@ -108,7 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       IconButton(onPressed:() => createContactOverlay(context, 
-                      FlutterContacts.getContact(_contacts[index].id, withProperties: true)),
+                      FlutterContacts.getContact(_contacts[index].id, withProperties: true,
+                      withThumbnail: true)),
                        icon: Icon(Icons.question_mark_rounded)
                       )
                     ],

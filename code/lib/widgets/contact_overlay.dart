@@ -64,17 +64,33 @@ class _OverlayExampleState extends State<OverlayExample> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("contact's name"),
+        title: const Text("Details"),
+        leading:
+          BackButton(
+            onPressed: () => removeHighlightOverlay(),
+
+          ),
       ),
       body: Center(
         child: 
-        Column(mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(widget.contactData!.displayName,
-          style: Theme.of(context).textTheme.headlineLarge,),
-          IconButton(onPressed: () => removeHighlightOverlay(),
-           icon: Icon(Icons.delete_forever))
-        ],
+        Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // add circular avatr containing the Thumbnail image of the contact if it has any
+            CircleAvatar(
+              radius: 80.0,
+              foregroundImage: widget.contactData?.photo != null
+              ? MemoryImage(widget.contactData!.photo!):
+              null,
+            ),
+            // Image(image: MemoryImage(widget.contactData!.photo!)),
+            Text(widget.contactData!.displayName,
+            style: Theme.of(context).textTheme.headlineLarge,),
+            IconButton(onPressed: () => removeHighlightOverlay(),
+             icon: Icon(Icons.delete_forever))
+          ],
+          ),
         ),
       ),
     );
