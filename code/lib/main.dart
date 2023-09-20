@@ -70,44 +70,53 @@ class _MyHomePageState extends State<MyHomePage> {
     boot = !boot;
     }
 
-    return Scaffold(
-      appBar: AppBar(
- 
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-  
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-
-        child: ListView.builder(
-          // listView to Show the list of Contacts
-          itemCount: _contacts.length,
-          itemBuilder:(context, index) =>
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 0.8),
-              color: Colors.white30,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-                color: Theme.of(context).primaryColor,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: (MediaQuery.sizeOf(context).width - 68.8),
-                      child: Text(_contacts[index].displayName,
-                      style: Theme.of(context).textTheme.headlineSmall,
+    return WillPopScope(
+       onWillPop: () {
+        if (contactOverlay != null) {
+          removeHighlightOverlay();
+          return Future(() => false);
+        }
+        return Future(() => true);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+     
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      
+          title: Text(widget.title),
+        ),
+        body: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+    
+          child: ListView.builder(
+            // listView to Show the list of Contacts
+            itemCount: _contacts.length,
+            itemBuilder:(context, index) =>
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 0.8),
+                color: Colors.white30,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                  color: Theme.of(context).primaryColor,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: (MediaQuery.sizeOf(context).width - 68.8),
+                        child: Text(_contacts[index].displayName,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        ),
                       ),
-                    ),
-                    IconButton(onPressed:() => createContactOverlay(context, 
-                    FlutterContacts.getContact(_contacts[index].id, withProperties: true)),
-                     icon: Icon(Icons.question_mark_rounded)
-                    )
-                  ],
-                )
-                ),
-            )
-          ,
+                      IconButton(onPressed:() => createContactOverlay(context, 
+                      FlutterContacts.getContact(_contacts[index].id, withProperties: true)),
+                       icon: Icon(Icons.question_mark_rounded)
+                      )
+                    ],
+                  )
+                  ),
+              )
+            ,
+          ),
         ),
       ),
     );

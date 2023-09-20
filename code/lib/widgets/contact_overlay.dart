@@ -79,7 +79,5 @@ class _OverlayExampleState extends State<OverlayExample> {
       ),
     );
   }
-  
-  
 }
 
