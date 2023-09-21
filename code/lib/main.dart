@@ -93,28 +93,28 @@ class _MyHomePageState extends State<MyHomePage> {
             // listView to Show the list of Contacts
             itemCount: _contacts.length,
             itemBuilder:(context, index) =>
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 0.8),
-                color: Colors.white30,
+              Card(
+                shadowColor: Theme.of(context).colorScheme.onBackground,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 00.0),
                   color: Theme.of(context).primaryColor,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 68.8),
-                        child: Text(_contacts[index].displayName,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                      ),
-                      IconButton(onPressed:() => createContactOverlay(context, 
+                  child:
+                  TextButton.icon(
+                    icon: const Icon(
+                      size: 40.0,
+                      Icons.question_mark_rounded),
+                    onPressed: () => createContactOverlay(context,
                       FlutterContacts.getContact(_contacts[index].id, withProperties: true,
-                      withThumbnail: true)),
-                       icon: Icon(Icons.question_mark_rounded)
-                      )
-                    ],
-                  )
+                        withThumbnail: true)),
+                    style: const ButtonStyle(
+                      alignment: AlignmentDirectional.centerStart,
+                      shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
+                    ),
+                    label: Text(_contacts[index].displayName,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    ),
                   ),
+                ),
               )
             ,
           ),
