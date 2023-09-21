@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // Request contact permission
       if (await FlutterContacts.requestPermission()) {
         // Get all contacts
-            _contacts = await FlutterContacts.getContacts();
+            _contacts = await FlutterContacts.getContacts(withThumbnail: true,);
             setState(() {
             });
         }
@@ -96,13 +96,17 @@ class _MyHomePageState extends State<MyHomePage> {
               Card(
                 shadowColor: Theme.of(context).colorScheme.onBackground,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 00.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, ),
                   color: Theme.of(context).primaryColor,
                   child:
                   TextButton.icon(
-                    icon: const Icon(
-                      size: 40.0,
-                      Icons.question_mark_rounded),
+                    icon: _contacts[index].thumbnail != null
+                    ? CircleAvatar(foregroundImage: MemoryImage(_contacts[index].thumbnail!))
+                    : CircleAvatar(
+                      backgroundColor: Color(_contacts[index].hashCode).withAlpha(80),
+                      child: Text(_contacts[index].displayName[0]),
+                    )
+                    ,
                     onPressed: () => createContactOverlay(context,
                       FlutterContacts.getContact(_contacts[index].id, withProperties: true,
                         withThumbnail: true)),

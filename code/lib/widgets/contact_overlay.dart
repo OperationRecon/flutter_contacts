@@ -78,17 +78,24 @@ class _OverlayExampleState extends State<OverlayExample> {
           child: Column(mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // add circular avatr containing the Thumbnail image of the contact if it has any
-            CircleAvatar(
-              radius: 80.0,
-              foregroundImage: widget.contactData?.photo != null
-              ? MemoryImage(widget.contactData!.photo!):
-              null,
+            SizedBox(
+              width: 120,
+              height: 120,
+              child:
+                widget.contactData!.photo != null
+                        ? CircleAvatar(foregroundImage: MemoryImage(widget.contactData!.photo!),
+                        )
+                        : CircleAvatar(
+                          backgroundColor: Color(widget.contactData.hashCode).withAlpha(80),
+                          child: Text(widget.contactData!.displayName[0],
+                          textScaleFactor: 3.5,),
+                          ),
             ),
             // Image(image: MemoryImage(widget.contactData!.photo!)),
             Text(widget.contactData!.displayName,
             style: Theme.of(context).textTheme.headlineLarge,),
             IconButton(onPressed: () => removeHighlightOverlay(),
-             icon: Icon(Icons.delete_forever))
+             icon: const Icon(Icons.delete_forever))
           ],
           ),
         ),
