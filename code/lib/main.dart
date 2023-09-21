@@ -11,15 +11,15 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Contacts',
       theme: ThemeData(
         // This is the theme of your application.
 
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 1, 13, 65),
-         brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 1, 13, 65),
+            brightness: Brightness.dark),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Contacts'),
@@ -41,7 +41,6 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -50,14 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Contact> _contacts = [];
   bool boot = true;
 
-  void loadContacts() async{
-          // Request contact permission
-      if (await FlutterContacts.requestPermission()) {
-        // Get all contacts
-            _contacts = await FlutterContacts.getContacts(withThumbnail: true,);
-            setState(() {
-            });
-        }
+  void loadContacts() async {
+    // Request contact permission
+    if (await FlutterContacts.requestPermission()) {
+      // Get all contacts
+      _contacts = await FlutterContacts.getContacts(
+        withThumbnail: true,
+      );
+      setState(() {});
+    }
   }
 
   @override
@@ -65,13 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // This method is rerun every time setState is called, for instance as done
 
     // load contact list
-    if (boot){
-    loadContacts();
-    boot = !boot;
+    if (boot) {
+      loadContacts();
+      boot = !boot;
     }
 
     return WillPopScope(
-       onWillPop: () {
+      onWillPop: () {
         if (contactOverlay != null) {
           removeHighlightOverlay();
           return Future(() => false);
@@ -80,47 +80,48 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-     
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      
           title: Text(widget.title),
         ),
         body: Center(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
-    
+
           child: ListView.builder(
             // listView to Show the list of Contacts
             itemCount: _contacts.length,
-            itemBuilder:(context, index) =>
-              Card(
-                shadowColor: Theme.of(context).colorScheme.onBackground,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, ),
-                  color: Theme.of(context).primaryColor,
-                  child:
-                  TextButton.icon(
-                    icon: _contacts[index].thumbnail != null
-                    ? CircleAvatar(foregroundImage: MemoryImage(_contacts[index].thumbnail!))
-                    : CircleAvatar(
-                      backgroundColor: Color(_contacts[index].hashCode).withAlpha(80),
-                      child: Text(_contacts[index].displayName[0]),
-                    )
-                    ,
-                    onPressed: () => createContactOverlay(context,
-                      FlutterContacts.getContact(_contacts[index].id, withProperties: true,
-                        withThumbnail: true)),
-                    style: const ButtonStyle(
-                      alignment: AlignmentDirectional.centerStart,
-                      shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
-                    ),
-                    label: Text(_contacts[index].displayName,
+            itemBuilder: (context, index) => Card(
+              shadowColor: Theme.of(context).colorScheme.onBackground,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                ),
+                color: Theme.of(context).primaryColor,
+                child: TextButton.icon(
+                  icon: _contacts[index].thumbnail != null
+                      ? CircleAvatar(
+                          foregroundImage:
+                              MemoryImage(_contacts[index].thumbnail!))
+                      : CircleAvatar(
+                          backgroundColor:
+                              Color(_contacts[index].hashCode).withAlpha(80),
+                          child: Text(_contacts[index].displayName[0]),
+                        ),
+                  onPressed: () => createContactOverlay(
+                      context,
+                      FlutterContacts.getContact(_contacts[index].id,
+                          withProperties: true, withThumbnail: true)),
+                  style: const ButtonStyle(
+                    alignment: AlignmentDirectional.centerStart,
+                    shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
+                  ),
+                  label: Text(
+                    _contacts[index].displayName,
                     style: Theme.of(context).textTheme.headlineSmall,
-                    ),
                   ),
                 ),
-              )
-            ,
+              ),
+            ),
           ),
         ),
       ),
