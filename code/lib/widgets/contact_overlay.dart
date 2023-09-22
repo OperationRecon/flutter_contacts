@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 OverlayEntry? contactOverlay;
 
@@ -37,22 +38,11 @@ class ContactOverlay extends StatefulWidget {
   });
 
   final Contact? contactData;
-
   @override
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
 
 class _ContactOverlayState extends State<ContactOverlay> {
-  @override
-  void dispose() {
-    // Make sure to remove OverlayEntry when the widget is disposed.
-    if (contactOverlay != null) {
-      removeHighlightOverlay();
-    }
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     // create the overlay containing the contactEntry
@@ -89,17 +79,48 @@ class _ContactOverlayState extends State<ContactOverlay> {
                       ),
               ),
               // Image(image: MemoryImage(widget.contactData!.photo!)),
-              Text(
-                widget.contactData!.displayName,
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              IconButton(
-                  onPressed: () => removeHighlightOverlay(),
-                  icon: const Icon(Icons.delete_forever))
+              //Text(
+              //  widget.contactData!.displayName,
+              //  style: Theme.of(context).textTheme.headlineLarge,
+              //),
+              //Text(
+              //  widget.contactData!.phones.toString(),
+              //),
+              for (var numberEntries in widget.contactData!.phones)
+                ListTile(
+                  title: Text(numberEntries.number.toString()),
+                  leading: IconButton(
+                    onPressed: () => launchUrl(
+                      Uri(
+                        scheme: 'tel',
+                        path: numberEntries.number.toString(),
+                      ),
+                    ),
+                    icon: const Icon(Icons.call),
+                  ),
+                  trailing: IconButton(
+                      onPressed: () => launchUrl(
+                            Uri(
+                              scheme: 'https',
+                              path: 'archlinux.org',
+                            ),
+                          ),
+                      icon: const Icon(Icons.edit)),
+                ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Make sure to remove OverlayEntry when the widget is disposed.
+    if (contactOverlay != null) {
+      removeHighlightOverlay();
+    }
+
+    super.dispose();
   }
 }
