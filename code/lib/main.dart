@@ -91,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView.builder(
             // listView to Show the list of Contacts
             itemCount: _contacts.length,
-            itemBuilder: (context, index) => ContactListEntry(contactData: _contacts[index]),
+            itemBuilder: (context, index) =>
+                ContactListEntry(contactData: _contacts[index]),
           ),
         ),
       ),
