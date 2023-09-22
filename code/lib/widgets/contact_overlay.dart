@@ -13,7 +13,7 @@ void createContactOverlay(
 
   // build new overlay
   contactOverlay = OverlayEntry(builder: (context) {
-    return OverlayExample(contactData: data);
+    return ContactOverlay(contactData: data);
   });
 
   assert(contactOverlay != null);
@@ -30,8 +30,8 @@ void removeHighlightOverlay() {
   }
 }
 
-class OverlayExample extends StatefulWidget {
-  const OverlayExample({
+class ContactOverlay extends StatefulWidget {
+  const ContactOverlay({
     super.key,
     required this.contactData,
   });
@@ -39,10 +39,10 @@ class OverlayExample extends StatefulWidget {
   final Contact? contactData;
 
   @override
-  State<OverlayExample> createState() => _OverlayExampleState();
+  State<ContactOverlay> createState() => _ContactOverlayState();
 }
 
-class _OverlayExampleState extends State<OverlayExample> {
+class _ContactOverlayState extends State<ContactOverlay> {
   @override
   void dispose() {
     // Make sure to remove OverlayEntry when the widget is disposed.
