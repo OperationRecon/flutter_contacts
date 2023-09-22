@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 OverlayEntry? contactOverlay;
 
@@ -37,7 +38,6 @@ class ContactOverlay extends StatefulWidget {
   });
 
   final Contact? contactData;
-
   @override
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
@@ -90,11 +90,22 @@ class _ContactOverlayState extends State<ContactOverlay> {
                 ListTile(
                   title: Text(numberEntries.number.toString()),
                   leading: IconButton(
-                    onPressed: () => {},
+                    onPressed: () => launchUrl(
+                      Uri(
+                        scheme: 'tel',
+                        path: numberEntries.number.toString(),
+                      ),
+                    ),
                     icon: const Icon(Icons.call),
                   ),
                   trailing: IconButton(
-                      onPressed: () => {}, icon: const Icon(Icons.edit)),
+                      onPressed: () => launchUrl(
+                            Uri(
+                              scheme: 'https',
+                              path: 'archlinux.org',
+                            ),
+                          ),
+                      icon: const Icon(Icons.edit)),
                 ),
             ],
           ),
