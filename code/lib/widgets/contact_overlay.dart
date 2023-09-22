@@ -31,28 +31,18 @@ void removeHighlightOverlay() {
 }
 
 class OverlayExample extends StatefulWidget {
+  final Contact? contactData;
+
   const OverlayExample({
     super.key,
     required this.contactData,
   });
-
-  final Contact? contactData;
 
   @override
   State<OverlayExample> createState() => _OverlayExampleState();
 }
 
 class _OverlayExampleState extends State<OverlayExample> {
-  @override
-  void dispose() {
-    // Make sure to remove OverlayEntry when the widget is disposed.
-    if (contactOverlay != null) {
-      removeHighlightOverlay();
-    }
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     // create the overlay containing the contactEntry
@@ -89,17 +79,37 @@ class _OverlayExampleState extends State<OverlayExample> {
                       ),
               ),
               // Image(image: MemoryImage(widget.contactData!.photo!)),
-              Text(
-                widget.contactData!.displayName,
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              IconButton(
-                  onPressed: () => removeHighlightOverlay(),
-                  icon: const Icon(Icons.delete_forever))
+              //Text(
+              //  widget.contactData!.displayName,
+              //  style: Theme.of(context).textTheme.headlineLarge,
+              //),
+              //Text(
+              //  widget.contactData!.phones.toString(),
+              //),
+              for (var numberEntries in widget.contactData!.phones)
+                ListTile(
+                  title: Text(numberEntries.number.toString()),
+                  leading: IconButton(
+                    onPressed: () => {},
+                    icon: const Icon(Icons.call),
+                  ),
+                  trailing: IconButton(
+                      onPressed: () => {}, icon: const Icon(Icons.edit)),
+                ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Make sure to remove OverlayEntry when the widget is disposed.
+    if (contactOverlay != null) {
+      removeHighlightOverlay();
+    }
+
+    super.dispose();
   }
 }

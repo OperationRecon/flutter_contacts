@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+
 import 'widgets/contact_overlay.dart';
 
 void main() {
@@ -28,8 +29,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -41,6 +40,8 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+  const MyHomePage({super.key, required this.title});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -48,17 +49,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Contact> _contacts = [];
   bool boot = true;
-
-  void loadContacts() async {
-    // Request contact permission
-    if (await FlutterContacts.requestPermission()) {
-      // Get all contacts
-      _contacts = await FlutterContacts.getContacts(
-        withThumbnail: true,
-      );
-      setState(() {});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,5 +116,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void loadContacts() async {
+    // Request contact permission
+    if (await FlutterContacts.requestPermission()) {
+      // Get all contacts
+      _contacts = await FlutterContacts.getContacts(
+        withThumbnail: true,
+      );
+      setState(() {});
+    }
   }
 }
