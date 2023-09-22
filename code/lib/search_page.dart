@@ -4,6 +4,7 @@ import 'main.dart';
 import 'widgets/contact_list_entry.dart';
 
 List<String> names = contacts.map((e) => e.displayName).toList();
+List<String> ids = contacts.map((e) => e.id).toList();
 List<String> searchResults = [];
 
 class SecondRoute extends StatefulWidget {
@@ -31,7 +32,7 @@ class _SearchPageState extends State<SecondRoute> {
                 searchResults.clear();
                 setState(() {
                   searchResults.addAll(
-                      names.where((element) => element.contains(value)));
+                      names.where((element) => element.toLowerCase().contains(value.toLowerCase(),)));
                 });
               },
               decoration: const InputDecoration(
