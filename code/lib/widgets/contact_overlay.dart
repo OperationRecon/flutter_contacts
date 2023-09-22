@@ -99,13 +99,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
                     icon: const Icon(Icons.call),
                   ),
                   trailing: IconButton(
-                      onPressed: () => launchUrl(
-                            Uri(
-                              scheme: 'https',
-                              path: 'archlinux.org',
-                            ),
-                          ),
-                      icon: const Icon(Icons.edit)),
+                      onPressed: () => {}, icon: const Icon(Icons.edit)),
                 ),
             ],
           ),
