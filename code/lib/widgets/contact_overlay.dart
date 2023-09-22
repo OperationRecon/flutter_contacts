@@ -36,6 +36,8 @@ class ContactOverlay extends StatefulWidget {
     required this.contactData,
   });
 
+  final Contact? contactData;
+
   @override
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
