@@ -1,8 +1,9 @@
 import 'package:code/widgets/contact_list_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'search_page.dart';
 
-import 'widgets/contact_overlay.dart';
+List<Contact> contacts = [];
 
 void main() {
   runApp(const MyApp());
@@ -48,8 +49,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Contact> _contacts = [];
+
   bool boot = true;
+
+  void loadContacts() async {
+    // Request contact permission
+    if (await FlutterContacts.requestPermission()) {
+      // Get all contacts
+      contacts = await FlutterContacts.getContacts(
+        withThumbnail: true,
+      );
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,22 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
       boot = !boot;
     }
 
-    return WillPopScope(
-      onWillPop: () {
-        if (contactOverlay != null) {
-          removeHighlightOverlay();
-          return Future(() => false);
-        }
-        return Future(() => true);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
-        ),
-        body: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
 
           child: ListView.builder(
             // listView to Show the list of Contacts
@@ -85,6 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ContactListEntry(contactData: _contacts[index]),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SecondRoute()),
+      ),
+      tooltip: 'search',
+      child: const Icon(Icons.search_outlined),
       ),
     );
   }
@@ -100,3 +111,5 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
+
+
