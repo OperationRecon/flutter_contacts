@@ -1,3 +1,4 @@
+import 'package:code/widgets/contact_list_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
@@ -80,38 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView.builder(
             // listView to Show the list of Contacts
             itemCount: _contacts.length,
-            itemBuilder: (context, index) => Card(
-              shadowColor: Theme.of(context).colorScheme.onBackground,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                ),
-                color: Theme.of(context).primaryColor,
-                child: TextButton.icon(
-                  icon: _contacts[index].thumbnail != null
-                      ? CircleAvatar(
-                          foregroundImage:
-                              MemoryImage(_contacts[index].thumbnail!))
-                      : CircleAvatar(
-                          backgroundColor:
-                              Color(_contacts[index].hashCode).withAlpha(80),
-                          child: Text(_contacts[index].displayName[0]),
-                        ),
-                  onPressed: () => createContactOverlay(
-                      context,
-                      FlutterContacts.getContact(_contacts[index].id,
-                          withProperties: true, withThumbnail: true)),
-                  style: const ButtonStyle(
-                    alignment: AlignmentDirectional.centerStart,
-                    shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
-                  ),
-                  label: Text(
-                    _contacts[index].displayName,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ),
-              ),
-            ),
+            itemBuilder: (context, index) =>
+                ContactListEntry(contactData: _contacts[index]),
           ),
         ),
       ),
