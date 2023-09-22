@@ -84,12 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
           child: ListView.builder(
             // listView to Show the list of Contacts
-            itemCount: _contacts.length,
+            itemCount: contacts.length,
             itemBuilder: (context, index) =>
-                ContactListEntry(contactData: _contacts[index]),
+                ContactListEntry(contactData: contacts[index]),
           ),
         ),
-      ),
+      
       floatingActionButton: FloatingActionButton(onPressed: () => Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SecondRoute()),
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Request contact permission
     if (await FlutterContacts.requestPermission()) {
       // Get all contacts
-      _contacts = await FlutterContacts.getContacts(
+      contacts = await FlutterContacts.getContacts(
         withThumbnail: true,
       );
       setState(() {});
