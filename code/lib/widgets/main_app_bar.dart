@@ -1,19 +1,18 @@
-import 'package:code/main.dart';
 import 'package:flutter/material.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar({
     super.key,
-    required this.widget,
+    required this.widgetName,
   });
 
-  final MyHomePage widget;
+  final String widgetName;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      title: Text(widget.title),
+      title: Text(widgetName),
       actions: [
         IconButton(
           onPressed: () => {},
