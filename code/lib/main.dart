@@ -1,3 +1,4 @@
+import 'package:code/widgets/main_app_bar.dart';
 import 'package:code/widgets/contact_list_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -73,10 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
+      appBar: MainAppBar(widget: widget),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
