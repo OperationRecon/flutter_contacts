@@ -1,7 +1,8 @@
-import 'package:code/widgets/main_app_bar.dart';
 import 'package:code/widgets/contact_list_entry.dart';
+import 'package:code/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+
 import 'search_page.dart';
 
 List<Contact> contacts = [];
@@ -74,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      appBar: MainAppBar(widget: widget),
+      appBar: MainAppBar(widgetName: widget.title),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SecondRoute()),
+          MaterialPageRoute(builder: (context) => const SearchPage()),
         ),
         tooltip: 'search',
         child: const Icon(Icons.search_outlined),

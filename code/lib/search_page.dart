@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_contacts/flutter_contacts.dart';
 import 'main.dart';
 import 'widgets/contact_list_entry.dart';
 
-List<String> names = contacts.map((e) => e.displayName).toList();
 List<String> ids = contacts.map((e) => e.id).toList();
+List<String> names = contacts.map((e) => e.displayName).toList();
 List<String> searchResults = [];
 
-class SecondRoute extends StatefulWidget {
-  const SecondRoute({
+class SearchPage extends StatefulWidget {
+  const SearchPage({
     super.key,
   });
 
@@ -18,7 +19,7 @@ class SecondRoute extends StatefulWidget {
   }
 }
 
-class _SearchPageState extends State<SecondRoute> {
+class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,10 +31,17 @@ class _SearchPageState extends State<SecondRoute> {
             child: TextField(
               onChanged: (value) {
                 searchResults.clear();
-                setState(() {
-                  searchResults.addAll(
-                      names.where((element) => element.toLowerCase().contains(value.toLowerCase(),)));
-                });
+                setState(
+                  () {
+                    searchResults.addAll(
+                      names.where(
+                        (element) => element.toLowerCase().contains(
+                              value.toLowerCase(),
+                            ),
+                      ),
+                    );
+                  },
+                );
               },
               decoration: const InputDecoration(
                 icon: Icon(Icons.search_outlined),

@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 OverlayEntry? contactOverlay;
+
+bool editing = false;
 
 void createContactOverlay(
     BuildContext context, Future<Contact?> contactData) async {
@@ -32,12 +36,12 @@ void removeHighlightOverlay() {
 }
 
 class ContactOverlay extends StatefulWidget {
+  final Contact? contactData;
+
   const ContactOverlay({
     super.key,
     required this.contactData,
   });
-
-  final Contact? contactData;
   @override
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
@@ -53,6 +57,16 @@ class _ContactOverlayState extends State<ContactOverlay> {
         leading: BackButton(
           onPressed: () => removeHighlightOverlay(),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              editing = !editing;
+              print(editing);
+              setState(() {});
+            },
+            icon: const Icon(Icons.edit),
+          ),
+        ],
       ),
       body: Center(
         child: Padding(
@@ -78,14 +92,15 @@ class _ContactOverlayState extends State<ContactOverlay> {
                         ),
                       ),
               ),
-              // Image(image: MemoryImage(widget.contactData!.photo!)),
-              //Text(
-              //  widget.contactData!.displayName,
-              //  style: Theme.of(context).textTheme.headlineLarge,
-              //),
-              //Text(
-              //  widget.contactData!.phones.toString(),
-              //),
+              if (editing)
+                const ListTile(
+                  leading: Icon(Icons.numbers_sharp),
+                  title: TextField(
+                    keyboardType: TextInputType.number,
+                    maxLines: 1,
+                    onSubmitted: (String value) {},
+                  ),
+                ),
               for (var numberEntries in widget.contactData!.phones)
                 ListTile(
                   title: Text(numberEntries.number.toString()),
