@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:code/main.dart';
 
 OverlayEntry? contactOverlay;
 
@@ -93,12 +92,21 @@ class _ContactOverlayState extends State<ContactOverlay> {
                       ),
               ),
               if (editing)
-                const ListTile(
-                  leading: Icon(Icons.numbers_sharp),
+                ListTile(
+                  leading: const Icon(Icons.numbers_sharp),
                   title: TextField(
                     keyboardType: TextInputType.number,
                     maxLines: 1,
-                    onSubmitted: (String value) {},
+                    onSubmitted: (String value) {
+                      setState(() async {
+                        //widget.contactData!.update();
+                        widget.contactData!.phones.add(Phone(value));
+                        widget.contactData!.name.first = 'NAAs';
+                        print(widget.contactData!.phones);
+                        await contacts[int.parse(widget.contactData!.id)]
+                            .update();
+                      });
+                    },
                   ),
                 ),
               for (var numberEntries in widget.contactData!.phones)
