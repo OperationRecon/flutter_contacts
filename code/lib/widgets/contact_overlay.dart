@@ -103,6 +103,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
                         widget.contactData!.phones.add(Phone(value));
                         widget.contactData!.name.first = 'NAAs';
                         print(widget.contactData!.phones);
+                        await widget.contactData!.update();
                         await contacts[int.parse(widget.contactData!.id)]
                             .update();
                       });
