@@ -41,7 +41,10 @@ class ContactOverlay extends StatefulWidget {
 
 class _ContactOverlayState extends State<ContactOverlay> {
   bool editing = false;
-  Contact? contactData;
+  Contact? contactData = Contact(
+    id: "1",
+    displayName: "Loading",
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +63,6 @@ class _ContactOverlayState extends State<ContactOverlay> {
           IconButton(
             onPressed: () {
               editing = !editing;
-              print(editing);
               setState(() {});
             },
             icon: const Icon(Icons.edit),
@@ -148,5 +150,6 @@ class _ContactOverlayState extends State<ContactOverlay> {
   void _loadData() async {
     contactData = await FlutterContacts.getContact(widget.contact!.id,
         withAccounts: true);
+    setState(() {});
   }
 }
