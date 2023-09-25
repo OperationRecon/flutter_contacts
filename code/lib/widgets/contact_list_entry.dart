@@ -14,11 +14,9 @@ class ContactListEntry extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _ContactListEntryState();
-  
 }
 
 class _ContactListEntryState extends State<ContactListEntry> {
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -38,21 +36,18 @@ class _ContactListEntryState extends State<ContactListEntry> {
           color: Theme.of(context).primaryColor,
           child: TextButton.icon(
             icon: widget.contactData.thumbnail != null
-              // creates the circular avatar besides the entry's name, if the contact has a thumbnail
-              // it uses that. Otherwise it creates an avatar using the firstmost letter in the contact
-              // and a color unique to it.
+                // creates the circular avatar besides the entry's name, if the contact has a thumbnail
+                // it uses that. Otherwise it creates an avatar using the firstmost letter in the contact
+                // and a color unique to it.
                 ? CircleAvatar(
-                    foregroundImage:
-                        MemoryImage(widget.contactData.thumbnail!))
+                    foregroundImage: MemoryImage(widget.contactData.thumbnail!))
                 : CircleAvatar(
                     backgroundColor:
                         Color(widget.contactData.hashCode).withAlpha(80),
                     child: Text(widget.contactData.displayName[0]),
                   ),
             // creates on overlay that has the contact's detilas within
-            onPressed: () => createContactOverlay(
-                context,
-                widget.contactData),
+            onPressed: () => createContactOverlay(context, widget.contactData),
             style: const ButtonStyle(
               alignment: AlignmentDirectional.centerStart,
               shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
@@ -66,5 +61,5 @@ class _ContactListEntryState extends State<ContactListEntry> {
       ),
     );
   }
-
 }
+

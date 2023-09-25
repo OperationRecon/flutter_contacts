@@ -1,15 +1,12 @@
-// import 'dart:html';
+import 'dart:ffi';
 
-import 'package:code/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:code/main.dart';
 
 OverlayEntry? contactOverlay;
 
-void createContactOverlay(
-    BuildContext context, Contact contact) {
+void createContactOverlay(BuildContext context, Contact contact) {
   // remove older overlay if existent
   removeHighlightOverlay();
 
@@ -39,25 +36,17 @@ class ContactOverlay extends StatefulWidget {
     super.key,
     required this.contact,
   });
-  
+
   @override
-  
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
 
 class _ContactOverlayState extends State<ContactOverlay> {
-
   bool editing = false;
   Contact? contactData;
 
-  void _loadData() async {
-  contactData = await FlutterContacts.getContact(widget.contact!.id, withAccounts: true);
-  }
-
   @override
-  
   Widget build(BuildContext context) {
-
     // fetch data of contact
     _loadData();
 
@@ -92,8 +81,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
                 height: 120,
                 child: contactData!.photo != null
                     ? CircleAvatar(
-                        foregroundImage:
-                            MemoryImage(contactData!.photo!),
+                        foregroundImage: MemoryImage(contactData!.photo!),
                       )
                     : CircleAvatar(
                         backgroundColor:
@@ -104,8 +92,9 @@ class _ContactOverlayState extends State<ContactOverlay> {
                         ),
                       ),
               ),
-              Text(contactData!.displayName,
-              style: Theme.of(context).textTheme.headlineLarge,
+              Text(
+                contactData!.displayName,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               if (editing)
                 ListTile(
@@ -115,27 +104,31 @@ class _ContactOverlayState extends State<ContactOverlay> {
                     maxLines: 1,
                     onSubmitted: (String value) {
                       contactData!.phones.add(Phone(value));
-                      setState(() {
-                        contacts.firstWhere((element) => element.id == contactData!.id).phones.add(Phone(value));
-                        FlutterContacts.updateContact(contactData!);
-                      });
+                      FlutterContacts.updateContact(contactData!);
+                      editing = false;
+                      setState(() {});
                     },
                   ),
                 ),
               for (var numberEntries in contactData!.phones)
                 ListTile(
-                  title: Text(numberEntries.number.toString()),
+                  title: Text(numberEntries.number),
                   leading: IconButton(
                     onPressed: () => launchUrl(
                       Uri(
                         scheme: 'tel',
-                        path: numberEntries.number.toString(),
+                        path: numberEntries.number,
                       ),
                     ),
                     icon: const Icon(Icons.call),
                   ),
                   trailing: IconButton(
-                      onPressed: () => {}, icon: const Icon(Icons.edit)),
+                      onPressed: () => {
+                            contactData!.phones.remove(numberEntries),
+                            FlutterContacts.updateContact(contactData!),
+                            setState(() {}),
+                          },
+                      icon: const Icon(Icons.delete)),
                 ),
             ],
           ),
@@ -152,5 +145,10 @@ class _ContactOverlayState extends State<ContactOverlay> {
     }
 
     super.dispose();
+  }
+
+  void _loadData() async {
+    contactData = await FlutterContacts.getContact(widget.contact!.id,
+        withAccounts: true);
   }
 }
