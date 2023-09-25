@@ -91,6 +91,9 @@ class _ContactOverlayState extends State<ContactOverlay> {
                         ),
                       ),
               ),
+              Text(widget.contactData!.displayName,
+              style: Theme.of(context).textTheme.headlineLarge,
+              ),
               if (editing)
                 ListTile(
                   leading: const Icon(Icons.numbers_sharp),
