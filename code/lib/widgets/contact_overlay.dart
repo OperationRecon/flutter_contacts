@@ -44,7 +44,6 @@ class _ContactOverlayState extends State<ContactOverlay> {
   bool editing = false;
   Contact? contactData = Contact(
     id: "Loading",
-    displayName: "Loading",
   );
 
   @override
@@ -94,10 +93,11 @@ class _ContactOverlayState extends State<ContactOverlay> {
                           ),
                         ),
                 ),
-                Text(
-                  contactData!.displayName,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
+                if (!editing)
+                  Text(
+                    contactData!.displayName,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
                 if (editing)
                   ListTile(
                     leading: const Icon(Icons.numbers_sharp),
@@ -139,7 +139,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
       );
     } else {
       return const Scaffold(
-        appBar: MainAppBar(widgetName: 'Loading'),
+        appBar: MainAppBar(widgetName: 'Flutter Contacts'),
       );
     }
   }
@@ -157,6 +157,8 @@ class _ContactOverlayState extends State<ContactOverlay> {
   void _loadData() async {
     contactData = await FlutterContacts.getContact(widget.contact!.id,
         withAccounts: true);
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 }
