@@ -1,17 +1,21 @@
-import 'package:code/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 OverlayEntry? contactOverlay;
+bool overlayPendingRemoval = false;
 
-void createContactOverlay(BuildContext context, Contact contact) {
+void changeContactOverlay(BuildContext context, Contact contact,) {
+  /// used to add or remove a contact overlay,
+  ///  setting remove to true switches the overlay with one that gets removed intantly.
+
   // remove older overlay if existent
   removeHighlightOverlay();
 
   // build new overlay
   contactOverlay = OverlayEntry(builder: (context) {
-    return ContactOverlay(contact: contact);
+    return ContactOverlay(contact: contact,);
   });
 
   assert(contactOverlay != null);
@@ -22,9 +26,11 @@ void createContactOverlay(BuildContext context, Contact contact) {
 
 // Remove the OverlayEntry
 void removeHighlightOverlay() {
+
   if (contactOverlay != null) {
     contactOverlay?.remove();
     contactOverlay = null;
+    overlayPendingRemoval = false;
   }
 }
 
@@ -36,6 +42,8 @@ class ContactOverlay extends StatefulWidget {
     required this.contact,
   });
 
+
+
   @override
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
@@ -45,20 +53,38 @@ class _ContactOverlayState extends State<ContactOverlay> {
   Contact? contactData = Contact(
     id: "Loading",
   );
-
   @override
+
   Widget build(BuildContext context) {
-    // fetch data of contact
-    _loadData();
+
+    if (overlayPendingRemoval){
+      setState(() {
+      });
+    }
+
+    // fetch data of contact and display a loading placeholder
+    if (contactData!.id == "Loading"){
+      _loadData();
+      return Container(
+        color: Colors.black12,
+        child: Text("loading",
+        style: Theme.of(context).textTheme.labelSmall,
+        ),
+      );
+    }
 
     // create the overlay containing the contactEntry
-    if (contactData!.id != "Loading") {
+    else {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Details"),
           leading: BackButton(
-            onPressed: () => removeHighlightOverlay(),
+            onPressed: () {
+              setState(() {
+                overlayPendingRemoval = true;
+              });
+              },
           ),
           actions: [
             IconButton(
@@ -136,21 +162,35 @@ class _ContactOverlayState extends State<ContactOverlay> {
             ),
           ),
         ),
-      );
-    } else {
-      return const Scaffold(
-        appBar: MainAppBar(widgetName: 'Flutter Contacts'),
-      );
-    }
+      )
+      .animate(effects: [
+        SlideEffect(delay: 0.0.ms, duration: overlayPendingRemoval? 
+          0.0.ms : 0.245.seconds,          
+          begin: const Offset(0.0, 1.0)
+        )
+      ],) 
+      // adds in the animation for when the overlay first slides in,
+      //gets reversed if the widget is marked for removal.
+      
+      .swap(builder:(context, child) => child!.animate(effects: [
+        SlideEffect(delay: 0.0.ms, duration: 0.2.seconds, 
+         begin: const Offset(0.0, 0.0), end: const Offset(0.0, 1.0))
+      ],
+      target: overlayPendingRemoval ? 1.0 : 0.0,
+      onComplete: (controller) {
+        if (overlayPendingRemoval) {
+        removeHighlightOverlay();
+        }
+      },
+      ),);
+      // adds in the animation for when the overlay slides out.
+
+    }   
   }
 
   @override
   void dispose() {
-    // Make sure to remove OverlayEntry when the widget is disposed.
-    if (contactOverlay != null) {
-      removeHighlightOverlay();
-    }
-
+    removeHighlightOverlay();
     super.dispose();
   }
 
