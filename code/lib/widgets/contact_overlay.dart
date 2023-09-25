@@ -102,7 +102,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
                   ListTile(
                     leading: const Icon(Icons.numbers_sharp),
                     title: TextField(
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.phone,
                       maxLines: 1,
                       onSubmitted: (String value) {
                         contactData!.phones.add(Phone(value));
