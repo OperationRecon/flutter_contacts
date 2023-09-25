@@ -1,23 +1,21 @@
+// import 'dart:html';
+
+import 'package:code/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:code/main.dart';
+// import 'package:code/main.dart';
 
 OverlayEntry? contactOverlay;
 
-bool editing = false;
-
 void createContactOverlay(
-    BuildContext context, Future<Contact?> contactData) async {
+    BuildContext context, Contact contact) {
   // remove older overlay if existent
   removeHighlightOverlay();
 
-  // load data of desired contact
-  Contact? data = await contactData;
-
   // build new overlay
   contactOverlay = OverlayEntry(builder: (context) {
-    return ContactOverlay(contactData: data);
+    return ContactOverlay(contact: contact);
   });
 
   assert(contactOverlay != null);
@@ -35,19 +33,34 @@ void removeHighlightOverlay() {
 }
 
 class ContactOverlay extends StatefulWidget {
-  final Contact? contactData;
+  final Contact? contact;
 
   const ContactOverlay({
     super.key,
-    required this.contactData,
+    required this.contact,
   });
+  
   @override
+  
   State<ContactOverlay> createState() => _ContactOverlayState();
 }
 
 class _ContactOverlayState extends State<ContactOverlay> {
+
+  bool editing = false;
+  Contact? contactData;
+
+  void _loadData() async {
+  contactData = await FlutterContacts.getContact(widget.contact!.id, withAccounts: true);
+  }
+
   @override
+  
   Widget build(BuildContext context) {
+
+    // fetch data of contact
+    _loadData();
+
     // create the overlay containing the contactEntry
     return Scaffold(
       appBar: AppBar(
@@ -77,21 +90,21 @@ class _ContactOverlayState extends State<ContactOverlay> {
               SizedBox(
                 width: 120,
                 height: 120,
-                child: widget.contactData!.photo != null
+                child: contactData!.photo != null
                     ? CircleAvatar(
                         foregroundImage:
-                            MemoryImage(widget.contactData!.photo!),
+                            MemoryImage(contactData!.photo!),
                       )
                     : CircleAvatar(
                         backgroundColor:
-                            Color(widget.contactData.hashCode).withAlpha(80),
+                            Color(contactData.hashCode).withAlpha(80),
                         child: Text(
-                          widget.contactData!.displayName[0],
+                          contactData!.displayName[0],
                           textScaleFactor: 3.5,
                         ),
                       ),
               ),
-              Text(widget.contactData!.displayName,
+              Text(contactData!.displayName,
               style: Theme.of(context).textTheme.headlineLarge,
               ),
               if (editing)
@@ -101,19 +114,15 @@ class _ContactOverlayState extends State<ContactOverlay> {
                     keyboardType: TextInputType.number,
                     maxLines: 1,
                     onSubmitted: (String value) {
-                      setState(() async {
-                        //widget.contactData!.update();
-                        widget.contactData!.phones.add(Phone(value));
-                        widget.contactData!.name.first = 'NAAs';
-                        print(widget.contactData!.phones);
-                        await widget.contactData!.update();
-                        await contacts[int.parse(widget.contactData!.id)]
-                            .update();
+                      contactData!.phones.add(Phone(value));
+                      setState(() {
+                        contacts.firstWhere((element) => element.id == contactData!.id).phones.add(Phone(value));
+                        FlutterContacts.updateContact(contactData!);
                       });
                     },
                   ),
                 ),
-              for (var numberEntries in widget.contactData!.phones)
+              for (var numberEntries in contactData!.phones)
                 ListTile(
                   title: Text(numberEntries.number.toString()),
                   leading: IconButton(

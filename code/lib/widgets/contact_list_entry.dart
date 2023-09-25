@@ -52,8 +52,7 @@ class _ContactListEntryState extends State<ContactListEntry> {
             // creates on overlay that has the contact's detilas within
             onPressed: () => createContactOverlay(
                 context,
-                FlutterContacts.getContact(widget.contactData.id,
-                    withProperties: true, withThumbnail: true)),
+                widget.contactData),
             style: const ButtonStyle(
               alignment: AlignmentDirectional.centerStart,
               shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
