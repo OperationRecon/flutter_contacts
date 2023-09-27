@@ -3,30 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-OverlayEntry? contactOverlay;
-
-void createContactOverlay(BuildContext context, Contact contact) {
-  // remove older overlay if existent
-  removeHighlightOverlay();
-
-  // build new overlay
-  contactOverlay = OverlayEntry(builder: (context) {
-    return ContactOverlay(contact: contact);
-  });
-
-  assert(contactOverlay != null);
-
-  // ignore: use_build_context_synchronously
-  Overlay.of(context).insert(contactOverlay!);
-}
-
-// Remove the OverlayEntry
-void removeHighlightOverlay() {
-  if (contactOverlay != null) {
-    contactOverlay?.remove();
-    contactOverlay = null;
-  }
-}
+bool starting = true;
 
 class ContactOverlay extends StatefulWidget {
   final Contact? contact;
@@ -48,9 +25,11 @@ class _ContactOverlayState extends State<ContactOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    if (starting) {
+      _loadData();
+      starting = false;
+    }
     // fetch data of contact
-    _loadData();
-
     // create the overlay containing the contactEntry
     if (contactData!.id != "Loading") {
       return Scaffold(
@@ -58,7 +37,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Details"),
           leading: BackButton(
-            onPressed: () => removeHighlightOverlay(),
+            onPressed: () => Navigator.pop(context),
           ),
           actions: [
             IconButton(
@@ -93,10 +72,19 @@ class _ContactOverlayState extends State<ContactOverlay> {
                           ),
                         ),
                 ),
+                Text(
+                  contactData!.displayName,
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
                 if (!editing)
-                  Text(
-                    contactData!.displayName,
-                    style: Theme.of(context).textTheme.headlineLarge,
+                  IconButton(
+                    onPressed: () {
+                      Contact? toDelete = contactData;
+                      contactData = Contact(id: 'dleted');
+                      toDelete!.delete();
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.delete_forever),
                   ),
                 if (editing)
                   ListTile(
@@ -142,16 +130,6 @@ class _ContactOverlayState extends State<ContactOverlay> {
         appBar: MainAppBar(widgetName: 'Flutter Contacts'),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    // Make sure to remove OverlayEntry when the widget is disposed.
-    if (contactOverlay != null) {
-      removeHighlightOverlay();
-    }
-
-    super.dispose();
   }
 
   void _loadData() async {

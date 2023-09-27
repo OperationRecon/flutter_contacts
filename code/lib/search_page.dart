@@ -57,8 +57,9 @@ class _SearchPageState extends State<SearchPage> {
           // listView to Show the list of Contacts
           itemCount: searchResults.length,
           itemBuilder: (context, index) => ContactListEntry(
-              contactData: contacts.firstWhere(
-                  (element) => element.displayName == searchResults[index])),
+            contactData: contacts.firstWhere(
+                (element) => element.displayName == searchResults[index]),
+          ),
         ),
       ),
     );

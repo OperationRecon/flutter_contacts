@@ -33,6 +33,8 @@ dependencies:
   flutter_contacts: ^1.1.7+1
   # For Making phoecalls
   url_launcher: ^6.1.14
+  # To update the main page after deletign a contact
+  focus_detector: ^2.0.1
 
 dev_dependencies:
   flutter_test:
