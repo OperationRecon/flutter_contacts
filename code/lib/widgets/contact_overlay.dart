@@ -29,7 +29,8 @@ class _ContactOverlayState extends State<ContactOverlay> {
       _loadData();
       starting = false;
     }
-    if (contactData!.phones.isEmpty) {
+    bool noPhones = contactData!.phones.isEmpty;
+    if (noPhones) {
       editing = true;
     }
     // fetch data of contact
@@ -51,7 +52,10 @@ class _ContactOverlayState extends State<ContactOverlay> {
                 editing = !editing;
                 setState(() {});
               },
-              icon: const Icon(Icons.edit),
+              //icon: const Icon(Icons.edit),
+              icon: editing && !noPhones
+                  ? const Icon(Icons.check)
+                  : const Icon(Icons.edit),
             ),
           ],
         ),
@@ -142,6 +146,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
   void _loadData() async {
     contactData = await FlutterContacts.getContact(widget.contact!.id,
         withAccounts: true);
+    editing = false;
     if (mounted) {
       setState(() {});
     }
