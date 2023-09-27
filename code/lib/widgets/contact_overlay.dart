@@ -29,6 +29,9 @@ class _ContactOverlayState extends State<ContactOverlay> {
       _loadData();
       starting = false;
     }
+    if (contactData!.phones.isEmpty) {
+      editing = true;
+    }
     // fetch data of contact
     // create the overlay containing the contactEntry
     if (contactData!.id != "Loading") {
