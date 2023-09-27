@@ -37,7 +37,10 @@ class _ContactOverlayState extends State<ContactOverlay> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Details"),
           leading: BackButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              starting = true;
+            },
           ),
           actions: [
             IconButton(
@@ -83,6 +86,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
                       contactData = Contact(id: 'dleted');
                       toDelete!.delete();
                       Navigator.pop(context);
+                      starting = true;
                     },
                     icon: const Icon(Icons.delete_forever),
                   ),
