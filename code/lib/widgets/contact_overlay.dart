@@ -82,7 +82,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
                   contactData!.displayName,
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
-                if (!editing)
+                if (editing)
                   IconButton(
                     onPressed: () {
                       Contact? toDelete = contactData;
