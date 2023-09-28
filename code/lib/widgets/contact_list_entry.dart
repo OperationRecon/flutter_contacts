@@ -19,13 +19,10 @@ class ContactListEntry extends StatefulWidget {
 class _ContactListEntryState extends State<ContactListEntry> {
   @override
   Widget build(BuildContext context) {
-    
     return WillPopScope(
       onWillPop: () {
         if (contactOverlay != null) {
-          Overlay.of(context).setState(() {
-            overlayPendingRemoval = true;
-          });
+          removeHighlightOverlay();
           return Future(() => false);
         }
         return Future(() => true);
@@ -50,7 +47,7 @@ class _ContactListEntryState extends State<ContactListEntry> {
                     child: Text(widget.contactData.displayName[0]),
                   ),
             // creates on overlay that has the contact's detilas within
-            onPressed: () => changeContactOverlay(context, widget.contactData),
+            onPressed: () => createContactOverlay(context, widget.contactData),
             style: const ButtonStyle(
               alignment: AlignmentDirectional.centerStart,
               shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
