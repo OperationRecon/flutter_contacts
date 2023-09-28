@@ -7,10 +7,12 @@ bool starting = true;
 
 class ContactOverlay extends StatefulWidget {
   final Contact? contact;
+  final String contactName;
 
   const ContactOverlay({
     super.key,
     required this.contact,
+    required this.contactName,
   });
 
   @override
@@ -21,6 +23,7 @@ class _ContactOverlayState extends State<ContactOverlay> {
   bool editing = false;
   Contact? contactData = Contact(
     id: "Loading",
+    name: Name(first: 'Loading...'),
   );
 
   @override
@@ -39,7 +42,10 @@ class _ContactOverlayState extends State<ContactOverlay> {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Details"),
+          title: Hero(
+            tag: contactData!.id,
+            child: Text(widget.contactName),
+          ),
           leading: BackButton(
             onPressed: () {
               Navigator.pop(context);

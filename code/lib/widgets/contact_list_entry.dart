@@ -50,17 +50,22 @@ class _ContactListEntryState extends State<ContactListEntry> {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    ContactOverlay(contact: widget.contactData!),
+                builder: (context) => ContactOverlay(
+                  contact: widget.contactData!,
+                  contactName: widget.contactData!.displayName,
+                ),
               ),
             ),
             style: const ButtonStyle(
               alignment: AlignmentDirectional.centerStart,
               shape: MaterialStatePropertyAll(BeveledRectangleBorder()),
             ),
-            label: Text(
-              widget.contactData!.displayName,
-              style: Theme.of(context).textTheme.headlineSmall,
+            label: Hero(
+              tag: widget.contactData!.id,
+              child: Text(
+                widget.contactData!.displayName,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
             ),
           ),
         ),
