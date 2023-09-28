@@ -3,37 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-OverlayEntry? contactOverlay;
-
-void createContactOverlay(BuildContext context, Contact contact) {
-  // remove older overlay if existent
-  removeHighlightOverlay();
-
-  // build new overlay
-  contactOverlay = OverlayEntry(builder: (context) {
-    return ContactOverlay(contact: contact);
-  });
-
-  assert(contactOverlay != null);
-
-  // ignore: use_build_context_synchronously
-  Overlay.of(context).insert(contactOverlay!);
-}
-
-// Remove the OverlayEntry
-void removeHighlightOverlay() {
-  if (contactOverlay != null) {
-    contactOverlay?.remove();
-    contactOverlay = null;
-  }
-}
+bool starting = true;
 
 class ContactOverlay extends StatefulWidget {
   final Contact? contact;
+  final String contactName;
 
   const ContactOverlay({
     super.key,
     required this.contact,
+    required this.contactName,
   });
 
   @override
@@ -44,22 +23,34 @@ class _ContactOverlayState extends State<ContactOverlay> {
   bool editing = false;
   Contact? contactData = Contact(
     id: "Loading",
-    displayName: "Loading",
+    name: Name(first: 'Loading...'),
   );
 
   @override
   Widget build(BuildContext context) {
+    if (starting) {
+      _loadData();
+      starting = false;
+    }
+    bool noPhones = contactData!.phones.isEmpty;
+    if (noPhones) {
+      editing = true;
+    }
     // fetch data of contact
-    _loadData();
-
     // create the overlay containing the contactEntry
     if (contactData!.id != "Loading") {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Details"),
+          title: Hero(
+            tag: contactData!.id,
+            child: Text(widget.contactName),
+          ),
           leading: BackButton(
-            onPressed: () => removeHighlightOverlay(),
+            onPressed: () {
+              Navigator.pop(context);
+              starting = true;
+            },
           ),
           actions: [
             IconButton(
@@ -67,7 +58,10 @@ class _ContactOverlayState extends State<ContactOverlay> {
                 editing = !editing;
                 setState(() {});
               },
-              icon: const Icon(Icons.edit),
+              //icon: const Icon(Icons.edit),
+              icon: editing && !noPhones
+                  ? const Icon(Icons.check)
+                  : const Icon(Icons.edit),
             ),
           ],
         ),
@@ -99,10 +93,21 @@ class _ContactOverlayState extends State<ContactOverlay> {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 if (editing)
+                  IconButton(
+                    onPressed: () {
+                      Contact? toDelete = contactData;
+                      contactData = Contact(id: 'dleted');
+                      toDelete!.delete();
+                      Navigator.pop(context);
+                      starting = true;
+                    },
+                    icon: const Icon(Icons.delete_forever),
+                  ),
+                if (editing)
                   ListTile(
                     leading: const Icon(Icons.numbers_sharp),
                     title: TextField(
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.phone,
                       maxLines: 1,
                       onSubmitted: (String value) {
                         contactData!.phones.add(Phone(value));
@@ -144,19 +149,12 @@ class _ContactOverlayState extends State<ContactOverlay> {
     }
   }
 
-  @override
-  void dispose() {
-    // Make sure to remove OverlayEntry when the widget is disposed.
-    if (contactOverlay != null) {
-      removeHighlightOverlay();
-    }
-
-    super.dispose();
-  }
-
   void _loadData() async {
     contactData = await FlutterContacts.getContact(widget.contact!.id,
         withAccounts: true);
-    setState(() {});
+    editing = false;
+    if (mounted) {
+      setState(() {});
+    }
   }
 }

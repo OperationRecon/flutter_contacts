@@ -1,3 +1,4 @@
+import 'package:code/widgets/add_contact_dialog.dart';
 import 'package:flutter/material.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,7 +16,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(widgetName),
       actions: [
         IconButton(
-          onPressed: () => {},
+          onPressed: () => showAddContact(context),
           icon: const Icon(Icons.add),
         )
       ],
