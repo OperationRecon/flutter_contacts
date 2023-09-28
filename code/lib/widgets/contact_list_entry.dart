@@ -62,3 +62,4 @@ class _ContactListEntryState extends State<ContactListEntry> {
     );
   }
 }
+
